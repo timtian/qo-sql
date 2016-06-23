@@ -18,6 +18,7 @@ X(['](\\.|[^']|\\\')*?['])+                         return 'NSTRING'
 
 'SELECT'                                            return 'SELECT'
 'TOP'                                               return 'TOP'
+'LIMIT'                                             return 'LIMIT'
 'FROM'                                              return 'FROM'
 'WHERE'                                             return 'WHERE'
 'DISTINCT'                                          return 'DISTINCT'
@@ -109,9 +110,9 @@ Statement
 
 /* SELECT */
 Select
-	: SELECT DistinctClause TopClause ColumnsClause FromClause WhereClause OrderClause
+	: SELECT DistinctClause ColumnsClause FromClause WhereClause OrderClause LimitClause
 	    {
-	        $$ = {distinct: $2, top: $3, columns: $4, from: $5, where:$6, order:$7};
+	        $$ = {distinct: $2, columns: $3, from: $4, where:$5, order:$6, limit:$7};
 	    }
 	;
 
@@ -124,6 +125,11 @@ TopClause
     : { $$ = null; }
     | TOP NUMBER { $$ = $2; }
     | TOP ParamValue { $$ = $2; }
+    ;
+LimitClause
+    : { $$ = null;}
+    | LIMIT Expression { $$ = [0, $2]}
+    | LIMIT Expression COMMA Expression { $$ = [$2, $4]}
     ;
 
 ColumnsClause

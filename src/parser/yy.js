@@ -7,6 +7,10 @@ var yy = {};
 
 yy.paramList = [];
 
+yy.clear = function(){
+    yy.paramList = [];
+};
+
 yy.Column = function(options){
     this.value = options.value;
     if(options.as)

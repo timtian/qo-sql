@@ -32,6 +32,8 @@ var sql_template_plguin = {
             //parse and gen code
             var ast = SQLParser.parse(rawCode);
             ast.yy = SQLParser.yy;
+            ast.yy.clear();
+
             var code = SQLComplile.exec(ast, path);
 
             //keep the TemplateLiteral expressions

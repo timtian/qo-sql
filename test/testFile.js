@@ -18,12 +18,19 @@ var data2 =
         id:3,
         name:'C'
     },
+    index31:{
+        id:3,
+        name:'E'
+    },
     index4:{
         id:4,
         name:'D'
-    }
+    },
+    index32:{
+        id:3,
+        name:'F'
+    },
 };
-
 
 var data3 = [
     {
@@ -36,14 +43,13 @@ var data3 = [
     }
 ]
 var id = 2;
-var res = `sql:SELECT id, (id + 1) as id2, (name + "ABC") as name2, c, * FROM ${data2} WHERE (id+1)>${id + 1} AND name != "B"`;
+var start  = 1;
+var c = 'cccc';
+var res = `sql:SELECT  id, (id + 1) as id2, (name + "ABC") as name2, * FROM ${data2} WHERE (id+1)>${id + 1} AND name != "B" ORDER BY id, name2 desc LIMIT 1, 2`;
 
-var data4 = {
-    a:123,
-    ...data2
-}
 
-console.log(data4);
+var res2 = `sql:select id2 from ${data3} where id2>=3`;
 
+console.log(res2);
 console.log(res);
 

@@ -9,14 +9,6 @@ var jsbeautify = require('js-beautify');
 
 var compiler = {};
 
-compiler.mode = {
-    inline:"INLINE",
-    lib:"LIB",
-    lodash:"LODASH"
-};
-
-
-
 compiler.exec = function (ast) {
 
     var code = [];
@@ -35,79 +27,21 @@ compiler.exec = function (ast) {
     if (ast.where) {
         code.push('//set where expression here');
         code.push('if (' + compiler.parseOp(ast.where) + ') {');
-
-        if (ast.order) {
-            code.push('//set order expression');
-            code.push('orderList.push(key)');
-        }else if(ast.limit){
-            code.push('if(i < ' + ast.limit[0].value + '){');
-            code.push('    continue;');
-            code.push('}');
-            code.push('else (i > ' + ast.limit[0].value + ast.limit[1].value + '){');
-            code.push('    break;');
-            code.push('}');
-        }
-
         code.push('res[key] = ');
         code = code.concat(compiler.parseReturnColumns(ast.columns));
 
+
+        if (ast.order) {
+            code.push('//set order expression');
+            //orderList.push({
+            //    key: key,
+            //    value: item.id
+            //});
+        }
         code.push('}');
     }
 
     code.push('}');
-
-    if (ast.order) {
-        code.push('function ___sortByResname(a,b,name){');
-        code.push('    if(a[name] < b[name])');
-        code.push('        return -1;');
-        code.push('    else if(a[name] != b[name])');
-        code.push('        return 1;');
-        code.push('    return 0;');
-        code.push('}');
-
-        //ceate code
-        //var sortList = [['id', 'ASC'], ['name', 'DESC']]
-        var sortListCode = ['['];
-        ast.order.forEach(function(x){
-            if(sortListCode.length > 1)
-                sortListCode.push(',');
-            sortListCode.push("['" + compiler.safeStr(x.column.as) + "',");
-            sortListCode.push("'" + x.order + "']");
-        });
-        sortListCode.push('];');
-
-        code.push('var sortList = ');
-        code = code.concat(sortListCode);
-
-        code.push('orderList = orderList.sort(function(a, b){');
-        code.push('    for(var i = 0 ; i < sortList.length ; i ++){');
-        code.push('        var sortRet = ___sortByResname(res[a], res[b], sortList[i][0]);');
-        code.push('        if(sortRet != 0){');
-        code.push('            return sortList[i][1] == "ASC" ? sortRet :-sortRet;');
-        code.push('        }');
-        code.push('    }');
-        code.push('});');
-        code.push('');
-        code.push('var orderRes = {};');
-
-        if(ast.limit){
-            code.push('orderList = ');
-            if(ast.limit[1] == -1){
-                code.push('orderList.slice(' + ast.limit[0].value + ');');
-            }else{
-                code.push('orderList.slice(' + ast.limit[0].value + ',' + (parseInt(ast.limit[0].value) +  parseInt(ast.limit[1].value)) +');');
-            }
-        }
-
-        code.push('orderList.forEach(x=>{');
-        code.push('    orderRes[x] = res[x]');
-        code.push('});');
-        code.push('res = orderRes');
-    }
-
-
-
-
     code.push('return res;');
 
     //set order
