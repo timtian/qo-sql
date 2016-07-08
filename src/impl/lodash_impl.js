@@ -61,7 +61,7 @@ compiler.prototype.exec = function(ast, options, path){
                             aggCode.push('});');
                             aggCode.push('return sum;');
                             aggCode.push('})()');
-                            return aggCode.join('\n');
+                            break;
                         case "min" :
                             aggCode.push('(()=>{');
                             aggCode.push('var min = Number.MAX_VALUE;');
@@ -70,7 +70,7 @@ compiler.prototype.exec = function(ast, options, path){
                             aggCode.push('});');
                             aggCode.push('return min;');
                             aggCode.push('})()');
-                            return aggCode.join('\n');
+                            break;
                         case "max" :
                             aggCode.push('(()=>{');
                             aggCode.push('var max = Number.MIN_VALUE;');
@@ -79,7 +79,7 @@ compiler.prototype.exec = function(ast, options, path){
                             aggCode.push('});');
                             aggCode.push('return max;');
                             aggCode.push('})()');
-                            return aggCode.join('\n');
+                            break;
                         case "avg" :
                             aggCode.push('(()=>{');
                             aggCode.push('var sum = 0;');
@@ -88,14 +88,15 @@ compiler.prototype.exec = function(ast, options, path){
                             aggCode.push('});');
                             aggCode.push('return sum / value.length;');
                             aggCode.push('})()');
-                            return aggCode.join('\n');
+                            break;
                         case "count" :
                             aggCode.push('value.length');
-                            return aggCode.join('\n');
-
+                            break;
                         default:
-                            return "''"
+                            aggCode.push(me.parseFunction(col, ['result', 'value', 'key']));
                     }
+                    return aggCode.join('\n');
+
                 }
             }
         }));
@@ -105,7 +106,7 @@ compiler.prototype.exec = function(ast, options, path){
         code.push('}, [])');
     }
     else{
-        //2. normal select
+        //2. normal select .map(item=>{return xx});
         code.push('.map(item=>{ return ');
         code =  code.concat(me.parseReturnColumns(ast.columns));
         code.push('})');
@@ -113,7 +114,7 @@ compiler.prototype.exec = function(ast, options, path){
 
 
 
-    //3. set order
+    //3. set order .orderBy([a,b],[desc,asc])
     if (ast.order) {
         //ceate code
         var sortListName = [];
@@ -138,7 +139,7 @@ compiler.prototype.exec = function(ast, options, path){
         code.push(')');
     }
 
-    //4. set limit
+    //4. set limit .slice(x,y)
     if(ast.limit){
         code.push('.slice(');
         if(ast.limit[1] == -1){
@@ -150,7 +151,7 @@ compiler.prototype.exec = function(ast, options, path){
     }
 
 
-    //5. get value
+    //5. get value .value();
     code.push('.value()');
 
     code.unshift('function (params){');

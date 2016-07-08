@@ -53,7 +53,7 @@ var sql_template_plguin = {
 
             console.log(code);
 
-            //keep the TemplateLiteral expressions
+            //save the TemplateLiteral expressions
             var preexp = path.node.expressions;
             var replacement = babylon.parse( '(' + code + ')' , {plugins:['objectRestSpread']});
             replacement = replacement.program.body[0].expression;

@@ -5,7 +5,6 @@
 
 var _ = require('lodash');
 var yy = require('./parser/yy');
-var jsbeautify = require('js-beautify');
 
 var compiler = {};
 

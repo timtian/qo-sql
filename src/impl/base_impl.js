@@ -7,7 +7,7 @@ var _ = require('lodash');
 var yy = require('../parser/yy');
 var jsbeautify = require('js-beautify');
 
-var compiler = function(options){
+var compiler = function (options) {
     this.options = options;
 };
 
@@ -40,24 +40,39 @@ compiler.prototype.parseExpression = function (expr) {
     if (expr instanceof yy.Op) {
         code.push(this.parseOp(expr));
     } else if (expr instanceof yy.Column) {
-        code.push('item' + this.parseColumn(expr))
+        code.push(this.parseColumn(expr))
     } else if (expr instanceof yy.Value) {
-        if (typeof expr.value === 'string') {
-            code.push("'" + this.safeStr(expr.value) + "'");
-        } else {
-            code.push(expr.value);
-        }
+        code.push(this.parseValue(expr));
     } else if (expr instanceof yy.ParamValue) {
-        code.push('params[' + expr.index + ']');
+        code.push(this.parseParam(expr));
+    } else if (expr instanceof yy.FunctionValue) {
+        //default push item in last args
+        code.push(this.parseFunction(expr))
     }
     return code;
+};
+
+compiler.prototype.parseValue = function (value) {
+    if (typeof value.value === 'string') {
+        return "'" + this.safeStr(value.value) + "'";
+    } else {
+        return value.value;
+    }
+};
+
+compiler.prototype.parseParam = function (paramValue) {
+    return 'params[' + paramValue.index + ']';
+};
+
+compiler.prototype.parseFunction = function (funValue, exparams) {
+    return funValue.name + '(' + this.parseExpression(funValue.params) + ',' + (exparams ? exparams.join(',') : 'item') + ')';
 };
 
 compiler.prototype.parseColumn = function (col) {
     var code = [];
     var me = this;
     col.value.forEach(function (x) {
-        code.push("['" + me.safeStr(x) + "']")
+        code.push("item['" + me.safeStr(x) + "']")
     });
     return code.join('');
 };
@@ -65,8 +80,6 @@ compiler.prototype.parseColumn = function (col) {
 compiler.prototype.safeStr = function (name) {
     return name.replace(/'/gi, "\\\'")
 };
-
-
 
 compiler.prototype.parseReturnColumns = function (columns, options) {
 
@@ -85,17 +98,17 @@ compiler.prototype.parseReturnColumns = function (columns, options) {
                 code.pop();
                 code.push('...item')
             } else {
-                code.push('item' + this.parseColumn(col));
+                code.push(this.parseColumn(col));
             }
         } else if (col instanceof yy.Op) {
             code.push(this.parseOp(col));
-        } else if (col instanceof yy.ParamValue){
+        } else if (col instanceof yy.ParamValue) {
             code.push('params[' + col.index + ']');
-        } else if (col instanceof yy.FunctionValue){
-            if(options.trans && options.trans.functionValue){
+        } else if (col instanceof yy.FunctionValue) {
+            if (options.trans && options.trans.functionValue) {
                 code.push(options.trans.functionValue(col));
-            }else {
-                code.push(col.name + '(' + this.parseExpression(col.params) + ')')
+            } else {
+                code.push(this.parseFunction(col));
             }
         }
     }
@@ -104,18 +117,15 @@ compiler.prototype.parseReturnColumns = function (columns, options) {
     return code;
 };
 
-
-compiler.prototype.createComment = function(comment){
+compiler.prototype.createComment = function (comment) {
     var code = [];
-    code.push('/*');
+    code.push('/**');
     code.push(comment.replace(/(.+)/gi, '* $1'));
     code.push('*/');
 
     return code.join('\n');
 };
-/**
- * @param from
- */
+
 compiler.prototype.parseFrom = function (from) {
 
 };

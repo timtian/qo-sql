@@ -16,6 +16,7 @@ X(['](\\.|[^']|\\\')*?['])+                         return 'NSTRING'
 (["](\\.|[^"]|\\\")*?["])+                          return 'STRING'
 
 
+
 'SELECT'                                            return 'SELECT'
 'TOP'                                               return 'TOP'
 'LIMIT'                                             return 'LIMIT'
@@ -180,7 +181,7 @@ Expression
         { $$ = $1; }
     | ParamValue
         { $$ = $1; }
-    | FuncValue
+    | FunctionValue
         { $$ = $1; }
     ;
 
@@ -237,9 +238,9 @@ ParamValue
     | LPAR TEMPLATE_PARAM RPAR { $2 = new yy.ParamValue({value:$2}); $2.index = (yy.paramList.push($2) - 1); $$ = $2; }
     ;
 
-
-FuncValue
+FunctionValue
     : LITERAL LPAR Expression RPAR { $$ = new yy.FunctionValue({name: $1 , params: $3}) }
+    | LITERAL DOT FunctionValue { $3.name = $1 + $2 + $3.name; $$ = $3; }
     ;
 
 WhereClause

@@ -13,6 +13,7 @@ var util = require('util');
 var compiler = function(){
 };
 
+
 util.inherits(compiler, baseimpl);
 
 compiler.prototype.exec = function (ast) {
