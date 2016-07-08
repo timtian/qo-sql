@@ -3,6 +3,7 @@
  */
 
 var babel = require('babel-core');
+var _ = require('lodash');
 
 var options = {
     presets: [
@@ -11,7 +12,7 @@ var options = {
     plugins: [
         require('babel-plugin-syntax-object-rest-spread'),
         require('babel-plugin-transform-object-rest-spread'),
-        [require('../src/index.js'), { prefix: 'sql:' }]
+        [require('../src/index.js'), { prefix: 'sql:', mode :'lodash' }]
     ],
     babelrc : false
 };
