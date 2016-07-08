@@ -110,9 +110,9 @@ Statement
 
 /* SELECT */
 Select
-	: SELECT DistinctClause ColumnsClause FromClause WhereClause OrderClause LimitClause
+	: SELECT DistinctClause ColumnsClause FromClause WhereClause GroupClause OrderClause LimitClause
 	    {
-	        $$ = {distinct: $2, columns: $3, from: $4, where:$5, order:$6, limit:$7};
+	        $$ = {distinct: $2, columns: $3, from: $4, where:$5, group:$6, order:$7, limit:$8};
 	    }
 	;
 
@@ -180,6 +180,8 @@ Expression
         { $$ = $1; }
     | ParamValue
         { $$ = $1; }
+    | FuncValue
+        { $$ = $1; }
     ;
 
 NumValue
@@ -230,13 +232,37 @@ Op
 		{ $$ = new yy.Op({left:$1, op:'OR' , right:$3}); }
 	;
 
+ParamValue
+    : TEMPLATE_PARAM { $1 = new yy.ParamValue({value:$1}); $1.index = (yy.paramList.push($1) - 1); $$ = $1;}
+    | LPAR TEMPLATE_PARAM RPAR { $2 = new yy.ParamValue({value:$2}); $2.index = (yy.paramList.push($2) - 1); $$ = $2; }
+    ;
 
+
+FuncValue
+    : LITERAL LPAR Expression RPAR { $$ = new yy.FunctionValue({name: $1 , params: $3}) }
+    ;
 
 WhereClause
 	:  { $$ = undefined; }
 	| WHERE Expression
 		{ $$ = $2; }
 	;
+
+GroupClause
+    : { $$ = undefined; }
+    | GROUP_BY GroupArgs { $$ = $2; }
+    ;
+
+GroupArgs
+    : GroupArg { $$ = [$1] }
+    | GroupArgs COMMA GroupArg { $1.push($3); $$ = $1 }
+    ;
+
+GroupArg
+    : ColumnName { $$ = $1; }
+    | ParamValue { $$ = $1; }
+    ;
+
 
 
 FromClause
@@ -278,10 +304,6 @@ Join
     ;
 
 
-ParamValue
-    : TEMPLATE_PARAM { $1 = new yy.ParamValue({value:$1}); $1.index = (yy.paramList.push($1) - 1); $$ = $1;}
-    | LPAR TEMPLATE_PARAM RPAR { $2 = new yy.ParamValue({value:$2}); $2.index = (yy.paramList.push($2) - 1); $$ = $2; }
-    ;
 
 
 OrderClause
@@ -297,6 +319,7 @@ OrderArgs
 
 OrderArg
     : ColumnName { $$ = new yy.OrderValue({column:$1, order:'ASC'}); }
+    | ParamValue { $$ = new yy.OrderValue({column:$1, order:'ASC'}); }
     | OrderArg OrderType { $1.order = $2; $$ = $1; }
     ;
 

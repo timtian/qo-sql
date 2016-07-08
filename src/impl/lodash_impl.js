@@ -4,147 +4,160 @@
 
 
 var _ = require('lodash');
-var yy = require('./parser/yy');
+var yy = require('../parser/yy');
+var baseimpl = require('./base_impl');
 var jsbeautify = require('js-beautify');
+var util = require('util');
 
-var compiler = {};
 
-compiler.exec = function (ast) {
+var compiler = function(){
+};
 
+
+util.inherits(compiler, baseimpl);
+
+compiler.prototype.exec = function(ast, options, path){
     var code = [];
+    var me = this;
+
+    code.push(me.createComment(options.rawCode));
+
     code.push('var source = params[' + ast.from.from[0].index + '];');
-    code.push('var keys = Object.keys(source);');
-    code.push('var res = {};');
+    code.push('var res = _.chain(source)');
 
-    if (ast.order) {
-        code.push('var orderList = [];');
-    }
-
-    code.push('for(var i = 0; i < keys.length; ++i){');
-    code.push('var key = keys[i];');
-    code.push('var item = source[key];');
-
+    //1. set where
     if (ast.where) {
-        code.push('//set where expression here');
-        code.push('if (' + compiler.parseOp(ast.where) + ') {');
-        code.push('res[key] = ');
-        code = code.concat(compiler.parseReturnColumns(ast.columns));
-
-
-        if (ast.order) {
-            code.push('//set order expression');
-            //orderList.push({
-            //    key: key,
-            //    value: item.id
-            //});
-        }
-        code.push('}');
+        code.push('.filter(item=>{');
+        code.push('    return ' + me.parseOp(ast.where) + ';');
+        code.push('})');
     }
 
-    code.push('}');
-    code.push('return res;');
 
-    //set order
-    //orderList.sort((x, y)=> {
-    //    return x.value == y.value ? 0 : (x.value > y.value ? -1 : 1);
-    //});
+    if(ast.group){
+        code.push('.groupBy(item=>{');
 
-    //set top
-    //orderList = orderList.slice(0, 1);
+        code.push('    return ""');
+        ast.group.forEach(function(x){
+            code.push(' + "_" + ')
+            code.push(me.parseExpression(x));
+        });
 
-    //var output = {};
-    //orderList.forEach(x=> {
-    //    output[x.key] = res[x.key];
-    //});
+        code.push('})');
 
+        //set aggregate result
+        code.push('.reduce((result, value, key)=>{');
+        code.push('var item = value[0]');
+        code.push('var aggitem = ');
+        code = code.concat(this.parseReturnColumns(ast.columns, {
+            trans:{
+                functionValue:function(col){
+                    var aggCode = [];
+                    switch (col.name.toLowerCase()){
+                        case "sum" :
+                            aggCode.push('(()=>{');
+                            aggCode.push('var sum = 0;');
+                            aggCode.push('value.forEach(item=>{');
+                            aggCode.push("    sum += " +  me.parseExpression(col.params) + ";");
+                            aggCode.push('});');
+                            aggCode.push('return sum;');
+                            aggCode.push('})()');
+                            return aggCode.join('\n');
+                        case "min" :
+                            aggCode.push('(()=>{');
+                            aggCode.push('var min = Number.MAX_VALUE;');
+                            aggCode.push('value.forEach(item=>{');
+                            aggCode.push("    min = Math.min(min, " + me.parseExpression(col.params) + ");");
+                            aggCode.push('});');
+                            aggCode.push('return min;');
+                            aggCode.push('})()');
+                            return aggCode.join('\n');
+                        case "max" :
+                            aggCode.push('(()=>{');
+                            aggCode.push('var max = Number.MIN_VALUE;');
+                            aggCode.push('value.forEach(item=>{');
+                            aggCode.push("    max = Math.max(max, " + me.parseExpression(col.params) + ");");
+                            aggCode.push('});');
+                            aggCode.push('return max;');
+                            aggCode.push('})()');
+                            return aggCode.join('\n');
+                        case "avg" :
+                            aggCode.push('(()=>{');
+                            aggCode.push('var sum = 0;');
+                            aggCode.push('value.forEach(item=>{');
+                            aggCode.push("    sum += " +  me.parseExpression(col.params) + ";");
+                            aggCode.push('});');
+                            aggCode.push('return sum / value.length;');
+                            aggCode.push('})()');
+                            return aggCode.join('\n');
+                        case "count" :
+                            aggCode.push('value.length');
+                            return aggCode.join('\n');
+
+                        default:
+                            return "''"
+                    }
+                }
+            }
+        }));
+
+        code.push('result.push(aggitem);');
+        code.push('return result;');
+        code.push('}, [])');
+    }
+    else{
+        //2. normal select
+        code.push('.map(item=>{ return ');
+        code =  code.concat(me.parseReturnColumns(ast.columns));
+        code.push('})');
+    }
+
+
+
+    //3. set order
+    if (ast.order) {
+        //ceate code
+        var sortListName = [];
+        var sortListOrder = [];
+        ast.order.forEach(function(x){
+            if(x.column instanceof yy.Column)
+                sortListName.push("'" + me.safeStr(x.column.as) + "'");
+            else
+                sortListName.push(me.parseExpression(x.column));
+
+            sortListOrder.push("'" + x.order + "'");
+        });
+
+
+        code.push('.orderBy(');
+        code.push('[');
+        code.push(sortListName.join(','));
+        code.push('],');
+        code.push('[');
+        code.push(sortListOrder.join(','));
+        code.push(']');
+        code.push(')');
+    }
+
+    //4. set limit
+    if(ast.limit){
+        code.push('.slice(');
+        if(ast.limit[1] == -1){
+            code.push(me.parseExpression(ast.limit[0]));
+        }else{
+            code.push(me.parseExpression(ast.limit[0]) + ',' + me.parseExpression(ast.limit[0]) + '+' +  me.parseExpression(ast.limit[1]));
+        }
+        code.push(')');
+    }
+
+
+    //5. get value
+    code.push('.value()');
 
     code.unshift('function (params){');
+    code.push('return res;');
     code.push('}');
 
     return jsbeautify.js_beautify(code.join('\n'));
 };
-
-compiler.parseOp = function (op) {
-
-    var code = ['('];
-    code = code.concat(compiler.parseLeftOrRight(op.left));
-
-    if (op.op == "AND")
-        code.push('&&');
-    else if (op.op == "OR")
-        code.push('||');
-    else
-        code.push(op.op);
-
-    code = code.concat(compiler.parseLeftOrRight(op.right));
-    code.push(')');
-
-    return code.join(' ');
-};
-
-compiler.parseLeftOrRight = function (lr) {
-    var code = [];
-    if (lr instanceof yy.Op) {
-        code.push(compiler.parseOp(lr));
-    } else if (lr instanceof yy.Column) {
-        code.push('item' + compiler.parseColumn(lr))
-    } else if (lr instanceof yy.Value) {
-        if (typeof lr.value === 'string') {
-            code.push("'" + compiler.safeStr(lr.value) + "'");
-        } else {
-            code.push(lr.value);
-        }
-    } else if (lr instanceof yy.ParamValue) {
-        code.push('params[' + lr.index + ']');
-    }
-    return code;
-};
-
-compiler.parseColumn = function (col) {
-    var code = [];
-    col.value.forEach(function (x) {
-        code.push("['" + compiler.safeStr(x) + "']")
-    });
-    return code.join('');
-};
-
-compiler.safeStr = function (name) {
-    return name.replace(/'/gi, "\\\'")
-};
-
-compiler.parseReturnColumns = function (columns) {
-
-    var code = ['{'];
-    for (var i = 0; i < columns.length; i++) {
-
-        var col = columns[i];
-
-        if (i > 0)
-            code.push(',');
-
-        code.push("'" + compiler.safeStr(col.as) + "' : ");
-        if (col instanceof yy.Column) {
-            if (col.value[0] === '*') {
-                code.pop();
-                code.push('...item')
-            } else {
-                code.push('item' + compiler.parseColumn(col));
-            }
-        } else if (col instanceof yy.Op) {
-            code.push(compiler.parseOp(col));
-        }
-    }
-    code.push('}');
-
-    return code;
-};
-
-/**
- * @param from
- */
-compiler.parseFrom = function (from) {
-
-};
-
 
 module.exports = compiler;

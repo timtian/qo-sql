@@ -8,11 +8,20 @@ var SQLParser = require('./parser/sqlparser');
 var SQLComplile = require('./compiler');
 var t = require('babel-types');
 
+
 var sql_template_plguin = {
     manipulateOptions : function(){
 
     },
     visitor:{
+        Program: {
+            enter(path, state) {
+                console.log("Entered!");
+            },
+            exit() {
+                console.log("Exited!");
+            }
+        },
         TemplateLiteral : function(path, state){
             var rawCode = _.trim(this.file.code.substring(path.node.start, path.node.end), '`');
 
@@ -29,19 +38,25 @@ var sql_template_plguin = {
                 rawCode = rawCode.substring(options.prefix.length);
             }
 
+
+
             //parse and gen code
             var ast = SQLParser.parse(rawCode);
             ast.yy = SQLParser.yy;
             ast.yy.clear();
 
-            var code = SQLComplile.exec(ast, path);
+            var code = SQLComplile.exec(ast, {
+                mode:options.mode,
+                rawCode:rawCode
+            }, path);
+
+
+            console.log(code);
 
             //keep the TemplateLiteral expressions
             var preexp = path.node.expressions;
-            //var destNode = babylon.parse( code , {plugins:['objectRestSpread']});
             var replacement = babylon.parse( '(' + code + ')' , {plugins:['objectRestSpread']});
             replacement = replacement.program.body[0].expression;
-
             //path.replaceWithSourceString(code);
             path.replaceWith(
                 t.callExpression(replacement, [t.arrayExpression(preexp)])

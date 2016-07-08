@@ -48,6 +48,11 @@ yy.Value = function(options){
     this.value = options.value;
 };
 
+yy.FunctionValue = function(options){
+    this.name = options.name;
+    this.params = options.params;
+};
+
 yy.OrderValue = function(options){
     this.order = options.order;
     this.column = options.column;
