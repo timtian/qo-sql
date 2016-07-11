@@ -30,16 +30,32 @@ var c = 'cccc';
 var ordername = 'id';
 
 
-var res = `sql:
-SELECT   id,(id   + 1)     AS id2,(name + "ABC") AS name2,(${c} + '12')  AS c,*
-FROM     ${data2}
-WHERE    (id+1)>${id + 1}
-AND      name != "B"
-ORDER BY ${ordername},
-         name2 DESC
-LIMIT    ${start}, 2`;
+function test(a, b, c){
+    return 'test' + (+new Date());
+}
 
-var res2 = `sql:select type, location, sum(count) as sum, min(count) as min, count(count) as count, avg(count), max(count) from ${data3} where id2>=2 group by type, location`;
+var c = {
+    math:
+    {
+        check(id){
+            return id % 3 == 0;
+        }
+    }
+};
+
+
+//var res = `sql:
+//SELECT   id,(id   + 1)     AS id2,(name + "ABC") AS name2,(${c} + '12')  AS c,*
+//FROM     ${data2}
+//WHERE    (id+1)>${id + 1}
+//AND      name != "B"
+//ORDER BY ${ordername},
+//         name2 DESC
+//LIMIT    ${start}, 2`;
+
+var idin = [2,3,4];
+//var res2 = `sql:select type, location, sum(count) as sum, min(count) as min, count(count) as count, avg(count), max(count), test(type) from ${data3} where id2>=2 and check(id2) group by type, location`;
+var res2 = `sql:select * from ${data3} where id2 IN ${idin} and c.math.check(id2)`;
 
 console.log(res2);
 //console.log(res);
