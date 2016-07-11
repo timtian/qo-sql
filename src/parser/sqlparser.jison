@@ -76,13 +76,12 @@ false\b                                             return 'BOOLEAN'
 
 /lex
 
-
 %left AND OR
 %left EQ NE GE GT LE LT LIKE IS
 %left PLUS MINUS
 %left STAR SLASH
 %left NOT
-%left IN
+$left IN
 %ebnf
 
 %start main
@@ -231,7 +230,17 @@ Op
 		{ $$ = new yy.Op({left:$1, op:'AND', right:$3}); }
 	| Expression OR Expression
 		{ $$ = new yy.Op({left:$1, op:'OR' , right:$3}); }
+	| Expression IN LPAR ExpressionList RPAR
+	    { $$ = new yy.Op({left:$1, op:'IN' , right:$4}); }
+	| Expression NOT IN LPAR ExpressionList RPAR
+    	{ $$ = new yy.Op({left:$1, op:'NOT IN' , right:$5}); }
+    | Expression IN TEMPLATE_PARAM
+       	{ $3 = new yy.ParamValue({value:$3}); $3.index = (yy.paramList.push($3) - 1);  $$ = new yy.Op({left:$1, op:'IN' , right:$3}); }
+    | Expression NOT IN TEMPLATE_PARAM
+        { $4 = new yy.ParamValue({value:$4}); $4.index = (yy.paramList.push($4) - 1); $$ = new yy.Op({left:$1, op:'NOT IN' , right:$4}); }
 	;
+
+
 
 ParamValue
     : TEMPLATE_PARAM { $1 = new yy.ParamValue({value:$1}); $1.index = (yy.paramList.push($1) - 1); $$ = $1;}
@@ -239,8 +248,12 @@ ParamValue
     ;
 
 FunctionValue
-    : LITERAL LPAR Expression RPAR { $$ = new yy.FunctionValue({name: $1 , params: $3}) }
-    | LITERAL DOT FunctionValue { $3.name = $1 + $2 + $3.name; $$ = $3; }
+    : ColumnName LPAR Expression RPAR { $$ = new yy.FunctionValue({name: $1.value.join('.') , params: $3}) }
+    ;
+
+ExpressionList
+    : Expression { $$ = [$1] }
+    | ExpressionList COMMA Expression { $1.push($3); $$ = $1; }
     ;
 
 WhereClause

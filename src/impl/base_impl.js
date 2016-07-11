@@ -19,20 +19,47 @@ compiler.prototype.exec = function (ast, optinos, path) {
 
 compiler.prototype.parseOp = function (op) {
 
-    var code = ['('];
-    code = code.concat(this.parseExpression(op.left));
+    if (op.op == "IN") {
+        return "_.includes(" + this.parseExpressionList(op.right) + "," + this.parseExpression(op.left) + ')';
+    }
+    else if (op.op == "NOT IN") {
+        return "!(_.includes(" + this.parseExpressionList(op.right) + "," + this.parseExpression(op.left) + '))';
+    }
+    else {
 
-    if (op.op == "AND")
-        code.push('&&');
-    else if (op.op == "OR")
-        code.push('||');
-    else
-        code.push(op.op);
+        var code = ['('];
+        code = code.concat(this.parseExpression(op.left));
 
-    code = code.concat(this.parseExpression(op.right));
-    code.push(')');
+        if (op.op == "AND")
+            code.push('&&');
+        else if (op.op == "OR")
+            code.push('||');
+        else
+            code.push(op.op);
 
-    return code.join(' ');
+        code = code.concat(this.parseExpression(op.right));
+        code.push(')');
+
+        return code.join(' ');
+    }
+};
+
+compiler.prototype.parseExpressionList = function (list) {
+
+    if (list instanceof Array) {
+        var code = ['['];
+        var me = this;
+        list.forEach(function (item) {
+            if (code.length > 1)
+                code.push(',');
+            code.push(me.parseExpression(item));
+        });
+        code.push(']');
+
+        return code.join(' ');
+    }
+
+    return this.parseExpression(list);
 };
 
 compiler.prototype.parseExpression = function (expr) {
