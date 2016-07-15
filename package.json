@@ -3,7 +3,8 @@
   "description": "tim works",
   "version": "0.0.1",
   "devDependencies": {
-    "alasql": "^0.2.6"
+    "alasql": "^0.2.6",
+    "mocha": "^2.5.3"
   },
   "dependencies": {
     "babel-core": "^6.9.1",

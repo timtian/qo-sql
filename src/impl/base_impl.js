@@ -34,6 +34,8 @@ compiler.prototype.parseOp = function (op) {
             code.push('&&');
         else if (op.op == "OR")
             code.push('||');
+        else if (op.op == "=")
+            code.push('==');
         else
             code.push(op.op);
 
@@ -110,6 +112,7 @@ compiler.prototype.safeStr = function (name) {
 
 compiler.prototype.parseReturnColumns = function (columns, options) {
 
+    options = options || {};
     var code = ['{'];
     for (var i = 0; i < columns.length; i++) {
 

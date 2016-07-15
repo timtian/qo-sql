@@ -134,7 +134,7 @@ compiler.prototype.exec = function(ast, options, path){
         code.push(sortListName.join(','));
         code.push('],');
         code.push('[');
-        code.push(sortListOrder.join(','));
+        code.push(sortListOrder.join(',').toLowerCase());
         code.push(']');
         code.push(')');
     }
