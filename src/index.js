@@ -26,7 +26,8 @@ var sql_template_plguin = {
             var rawCode = _.trim(this.file.code.substring(path.node.start, path.node.end), '`');
 
             var defaultOptions = {
-                prefix : 'sql:'
+                prefix : 'sql:',
+                mode:'lodash'
             };
 
             var options = _.assign({}, defaultOptions, state.opts);
@@ -51,7 +52,10 @@ var sql_template_plguin = {
             }, path);
 
 
-            console.log(code);
+            if(options.debug){
+                console.log(rawCode, '==>', code);
+            }
+
 
             //save the TemplateLiteral expressions
             var preexp = path.node.expressions;

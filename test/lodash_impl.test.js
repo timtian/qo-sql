@@ -55,7 +55,18 @@ describe('lodash impl', function(){
             var res = testCase.selectById(7);
             assert.equal(res.length, 1);
             assert.deepEqual(res[0], exp);
-        })
+        });
+
+        it('selectByNotEqId', function(){
+            var minId = 70;
+            var excludeId = 72;
+            var exp = testData.arrayData.slice(minId, 100);
+            exp.splice(1, 1);
+
+            var res = testCase.selectByNotEqId(excludeId, minId);
+            assert.deepEqual(res, exp)
+
+        });
 
         it('selectByIdAndName', function(){
             var exp = testData.arrayData[6];
@@ -112,7 +123,6 @@ describe('lodash impl', function(){
         });
 
     });
-
 
     describe('#2 Select', function() {
 

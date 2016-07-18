@@ -1,4 +1,3 @@
-
 //data generate by http://www.generatedata.com
 
 var data= {};
@@ -1004,7 +1003,7 @@ data.arrayData = [
             "country": "Canada",
             "birthday": "388433554"
         }
-    ]
+    ];
 
 
 data.objectData = {};

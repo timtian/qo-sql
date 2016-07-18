@@ -28,6 +28,10 @@ testCase.selectById = function(id){
     return `sql:select * from ${testData} where id=${id}`;
 };
 
+testCase.selectByNotEqId = function(excludeId, minId){
+    return `sql:select * from ${testData} where id!=${excludeId} and id > ${minId}`;
+};
+
 testCase.selectByIdAndName = function(id,name){
     return `sql:select * from ${testData} where id=${id} and name=${name}`;
 };
@@ -55,9 +59,6 @@ testCase.selectFieldWithExpressionByType = function(type){
 testCase.selectAggByTypeAndCountry = function(minId){
     return `sql:select type, country, min(count) as min, max(count) as max, count(*) as total, sum(count) as sum from ${testData} WHERE id >${minId} group by type, country order by country, type`;
 };
-
-
-
 
 
 

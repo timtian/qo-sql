@@ -18,10 +18,10 @@ var options = {
 };
 
 
-var result = babel.transformFileSync('./testFile.js', options);
+var result = babel.transformFileSync('./test5.js', options);
 
 console.log(result.code);
 
-eval(result.code);
+//eval(result.code);
 
 //console.log(result.code);
