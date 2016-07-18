@@ -1,10 +1,16 @@
 {
-  "name": "templateliteral-sql",
-  "description": "tim works",
-  "version": "0.0.1",
+  "name": "babel-plugin-template-literals-qos",
+  "description": "Qos(Query Object with Sql) is a babel plugin to query object in template literals with sql syntax",
+  "keywords" : "sql query object babel plugin template literals",
+  "version": "0.0.2",
   "devDependencies": {
     "mocha": "^2.5.3"
   },
+  "repository" : {
+    "type":"git",
+    "url" : "https://github.com/timtian/Qos.git"
+  },
+  "main": "src/index.js",
   "dependencies": {
     "babel-core": "^6.9.1",
     "babel-plugin-syntax-object-rest-spread": "^6.8.0",
