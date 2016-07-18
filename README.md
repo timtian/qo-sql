@@ -20,16 +20,6 @@ npm install babel-plugin-template-literals-qos
 ## Usage
 
 
-### Options
-> prefix
-> default:'sql:'
-
-set template literal pattern
-
-> mode
-> default:'lodash'
-> set compile target,
-
 ```flow
 st=>start: Start
 op=>operation: Your Operation
