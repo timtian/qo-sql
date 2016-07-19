@@ -50,7 +50,16 @@ var data = function (params) {
 
 
 ## Install
+```
 npm install babel-plugin-template-literals-qos
+```
+
+转换需要依赖object-rest-spread。确保以下组件已安装
+```
+npm install babel-plugin-syntax-object-rest-spread
+npm install babel-plugin-transform-object-rest-spread
+```
+
 
 ## Usage
 Add the following line to your .babelrc file:
