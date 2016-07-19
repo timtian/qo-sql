@@ -74,6 +74,7 @@ Add the following line to your .babelrc file:
 ### Example
 
 
+
 - 条件过滤
 ```
    testCase.selectById = function(id){
@@ -133,4 +134,12 @@ Add the following line to your .babelrc file:
        return `sql:select *, testCase.formatter.formatMoney(count) as money from ${testData} where type=${type}`;
    };
 ```
-Out
+
+
+- 更多示例
+
+>https://github.com/timtian/Qos/blob/master/test/gen/test_main.js
+
+>编译后
+
+>https://github.com/timtian/Qos/blob/master/test/gen/test_main.gen.js
