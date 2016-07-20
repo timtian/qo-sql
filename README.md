@@ -142,7 +142,7 @@ Add the following line to your .babelrc file:
 
 >编译后
 
->[lodash]
->https://github.com/timtian/Qos/blob/master/test/gen/test_main.loadsh.gen.js
->[underscore]
->https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js
+>[lodash]  
+>https://github.com/timtian/Qos/blob/master/test/gen/test_main.loadsh.gen.js  
+>[underscore]  
+>https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js  
