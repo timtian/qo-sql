@@ -1,24 +1,24 @@
 # Qos
 
 Qos(Query Object with Sql)
-It is a implementation of object query with template literals of JavaScript using Sql
-> Babel doesn't support custom syntax,qos define syntax in template literals,
-> It`s a fast and easy way to define your own syntax
+是用于在js的template literals中使用sql查询语法进行对象查询的一种实现
 
+> babel中暂不支持自定义语法，在template literals中注入自定义语法,
+> 是实现自定义语法的一个快速简单方法
 
-## document
+## 文档
 - 中文 [https://github.com/timtian/Qos/blob/master/docs/README_CN.md]
 - English [https://github.com/timtian/Qos/blob/master/README.md]
 
-## specialty
+## 特点
 
+将SQL语法查询连接已存在的各种丰富lib(lodash, underscore, immutablejs),提供一种统一的、便捷的、透明的对象查询方法。
 
-It support a unified、convenient and clear way to query object by unite Sql and libs(lodash,underscore,immutablejs).
-- It`s easy to read and understand with SQL the ancient and declarative syntax.
-- It`s straightforward and flexible to pass parameters in template literals.
-- It will compile the source code to the target code,avoiding the performance problem of compiling at running time.
-- It will ensure the stability and performance of code by using the realization of the mature(lodash,underscore).
-- It just focuses on Object querying compared with other libs of Sql.
+- 使用SQL语法这种古老的声明式的语法特别在查询时易于阅读与理解。
+- 在template literals语法中传递参数更加直接明了，灵活的上下文。
+- 编译过程直接将最终实现代码编译至目标源码中,消除了在运行时编译性能问题。
+- 使用成熟实现(lodash, underscore)在稳定性与性能上更加有所保证。
+- 与其它SQL之类相比更加简单轻量聚焦于Object查询
 
 
 In
@@ -58,7 +58,7 @@ var data = function (params) {
 npm install babel-plugin-template-literals-qos
 ```
 
-Conversion relies on object-rest-spread.Please ensure that you have installed the following  components
+转换需要依赖object-rest-spread。确保以下组件已安装
 ```
 npm install babel-plugin-syntax-object-rest-spread
 npm install babel-plugin-transform-object-rest-spread
@@ -79,7 +79,7 @@ Add the following line to your .babelrc file:
 
 
 
-- filter
+- 条件过滤
 ```
    testCase.selectById = function(id){
        return `sql:select * from ${testData} where id=${id}`;
@@ -101,27 +101,27 @@ Add the following line to your .babelrc file:
        return `sql:select * from ${testData} where id>=${minid} and id<=${maxid}`;
    };
 ```
-- sorting and intercept
+- 排序及截取
 ```
    testCase.selectByBwIdWithOrder = function(minid, maxid, start, count){
        return `sql:select * from ${testData} where id>=${minid} and id<=${maxid} order by type, count desc limit ${start}, ${count}`;
    };
 ```
-- querying of IN
+- IN查询支持
 ```
    testCase.selectByInCountryListAndNotInTypeList = function(ctyList, typeList){
        return `sql:select * from ${testData} where country IN ${ctyList} AND type NOT IN ${typeList}`;
    };
 ```
 
-- self-defined result
+- 自定义查询结果
 ```
    testCase.selectFieldWithExpressionByType = function(type){
        return `sql:select id as ID, (id + 1) as ID2, (id / 3) as ID3, (city + '@' + country)  as address, testCase.formatter.formatMoney(count) from ${testData} where type=${type}`;
    };
 ```
-- Grouping and aggregation function
->supporting min, max, count, sum, avg
+- 分组及聚合函数
+>支持 min, max, count, sum, avg
 
 ```
    testCase.selectAggByTypeAndCountry = function(minId){
@@ -130,9 +130,9 @@ Add the following line to your .babelrc file:
 
 ```
 
-- custom function
->calling function in context
->It will pass the specified filed and the row`s content to callback(field, rowItem)
+- 自定义函数调用
+>调用当前上下文中的函数
+>callback(field, rowItem) 中将 传递指定的字段与行内容
 ```
    testCase.selectFieldWithExpressionByType = function(type){
        return `sql:select *, testCase.formatter.formatMoney(count) as money from ${testData} where type=${type}`;
@@ -140,11 +140,13 @@ Add the following line to your .babelrc file:
 ```
 
 
-- more examples
+- 更多示例
 
 >https://github.com/timtian/Qos/blob/master/test/gen/test_main.js
 
->after compiling
+>编译后
 
->[lodash] https://github.com/timtian/Qos/blob/master/test/gen/test_main.lodash.gen.js
->[underscore] https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js
+>[lodash]
+>https://github.com/timtian/Qos/blob/master/test/gen/test_main.lodash.gen.js
+>[underscore]
+>https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js
