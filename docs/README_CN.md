@@ -7,8 +7,9 @@ Qos(Query Object with Sql)
 > 是实现自定义语法的一个快速简单方法
 
 ## 文档
-- 中文 [https://github.com/timtian/Qos/blob/master/docs/README_CN.md]
-- English [https://github.com/timtian/Qos/blob/master/README.md]
+
+- [中文](https://github.com/timtian/Qos/blob/master/docs/README_CN.md)
+- [English](https://github.com/timtian/Qos/blob/master/README.md)
 
 ## 特点
 
@@ -142,11 +143,10 @@ Add the following line to your .babelrc file:
 
 - 更多示例
 
->https://github.com/timtian/Qos/blob/master/test/gen/test_main.js
+>[Examples](https://github.com/timtian/Qos/blob/master/test/gen/test_main.js)
 
 >编译后
 
->[lodash]
->https://github.com/timtian/Qos/blob/master/test/gen/test_main.lodash.gen.js
->[underscore]
->https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js
+>[Compile to lodash](https://github.com/timtian/Qos/blob/master/test/gen/test_main.lodash.gen.js)
+
+>[Compile to underscore](https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js)
