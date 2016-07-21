@@ -25,7 +25,7 @@ compiler.prototype.exec = function(ast, options, path){
     code.push('var source = params[' + ast.from.from[0].index + '];');
     code.push('var res = _.chain(source)');
 
-    //1. set where
+    // set where
     if (ast.where) {
         code.push('.filter(item=>{');
         code.push('    return ' + me.parseOp(ast.where) + ';');
@@ -113,19 +113,12 @@ compiler.prototype.exec = function(ast, options, path){
     }
 
 
-
-
-
-
-    //5. get value .value();
+    //get value .value();
     code.push('.value()');
 
 
-    //3. set order .sortBy([a,b],[desc,asc])
+    //set order .sort()
     if (ast.order) {
-
-
-
         //ceate code
         var sortListCode = ['['];
         ast.order.forEach(function(x){

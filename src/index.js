@@ -7,19 +7,20 @@ var babylon = require('babylon');
 var SQLParser = require('./parser/sqlparser');
 var SQLComplile = require('./compiler');
 var t = require('babel-types');
+var qoslib = require('././index');
 
 
-var sql_template_plguin = {
+var Qos = {
     manipulateOptions : function(){
 
     },
     visitor:{
         Program: {
             enter(path, state) {
-                console.log("Entered!");
+                //console.log("Entered!");
             },
             exit() {
-                console.log("Exited!");
+                //console.log("Exited!");
             }
         },
         TemplateLiteral : function(path, state){
@@ -66,7 +67,10 @@ var sql_template_plguin = {
                 t.callExpression(replacement, [t.arrayExpression(preexp)])
             );
         }
+    },
+    exec : function(sql, params, options){
+        return qoslib.exec(sql, params, options);
     }
 };
 
-module.exports = sql_template_plguin;
+module.exports = Qos;
