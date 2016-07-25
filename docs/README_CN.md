@@ -6,6 +6,9 @@ Qos(Query Object with Sql)
 > babel中暂不支持自定义语法，在template literals中注入自定义语法,
 > 是实现自定义语法的一个快速简单方法
 
+
+![cmd-markdown-logo](https://raw.githubusercontent.com/timtian/Qos/master/docs/image.png)
+
 ## 文档
 
 - [中文](https://github.com/timtian/Qos/blob/master/docs/README_CN.md)
