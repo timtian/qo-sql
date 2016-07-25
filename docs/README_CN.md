@@ -7,7 +7,7 @@ Qos(Query Object with Sql)
 > 是实现自定义语法的一个快速简单方法
 
 
-![cmd-markdown-logo](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
+![babel-plugin-flow](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
 
 ## 文档
 
