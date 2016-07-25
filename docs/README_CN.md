@@ -3,8 +3,6 @@
 Qos(Query Object with Sql)
 是用于在js的template literals中使用sql查询语法进行对象查询的一种实现
 
-> babel中暂不支持自定义语法，在template literals中注入自定义语法,
-> 是实现自定义语法的一个快速简单方法
 
 
 ![babel-plugin-flow](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
