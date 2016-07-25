@@ -2,9 +2,8 @@
 
 Qos(Query Object with Sql)
 It is a implementation of object query with template literals of JavaScript using Sql
-> Babel doesn't support custom syntax,qos define syntax in template literals,
-> It`s a fast and easy way to define your own syntax
 
+![babel-plugin-flow](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
 
 ## document
 - [中文](https://github.com/timtian/Qos/blob/master/docs/README_CN.md)
