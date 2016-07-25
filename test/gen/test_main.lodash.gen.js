@@ -26,11 +26,21 @@ testCase.formatter.formatMoney = function (number) {
     });
 };
 
-testCase.selectById = function (id) {
+testCase.demo = function (type, id, size) {
     return function (params) {
         /**
-         * select * from ${testData} where id=${id}
-         */var source = params[0];var res = _.chain(source).filter(function (item) {
+         *  select id, name, ${type} from ${testData} where id>${id} order by id desc limit 10, ${size}
+         */var source = params[1];var res = _.chain(source).filter(function (item) {
+            return item['id'] > params[2];
+        }).map(function (item) {
+            return { 'id': item['id'], 'name': item['name'], 'field_2': params[0] };
+        }).orderBy(['id'], ['desc']).slice(10, 10 + params[3]).value();return res;
+    }([type, testData, id, size]);
+};
+
+testCase.selectById = function (id) {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
             return item['id'] == params[1];
         }).map(function (item) {
             return _extends({}, item);

@@ -2,9 +2,8 @@
 
 Qos(Query Object with Sql)
 It is a implementation of object query with template literals of JavaScript using Sql
-> Babel doesn't support custom syntax,qos define syntax in template literals,
-> It`s a fast and easy way to define your own syntax
 
+![babel-plugin-flow](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
 
 ## document
 - [中文](https://github.com/timtian/Qos/blob/master/docs/README_CN.md)
@@ -66,12 +65,65 @@ npm install babel-plugin-transform-object-rest-spread
 
 
 ## Usage
-Add the following line to your .babelrc file:
+
+
+### Via .babelrc
 ```
 {
-    "plugins": ["babel-plugin-template-literals-qos"]
+    "plugins": [
+        ["babel-plugin-template-literals-qos", {
+            prefix:'sql:',
+            mode:'lodash'
+        }
+    ]
 }
 ```
+
+### Via Node API
+```
+var babel = require('babel-core');
+var _ = require('lodash');
+
+var options = {
+    presets: [
+        require('babel-preset-es2015')
+    ],
+    plugins: [
+        require('babel-plugin-syntax-object-rest-spread'),
+        require('babel-plugin-transform-object-rest-spread'),
+        [require('../src/index.js'), { prefix: 'sql:', mode :'lodash' }]
+    ],
+    babelrc : false
+};
+
+var result = babel.transform('code', options);
+
+```
+
+
+
+### Via Node Api As lib
+```
+var _ = require('lodash');
+var qos = require('babel-plugin-template-literals-qos/lib');
+var testData = require('../test/gen/test_data.js').arrayData;
+
+
+var res = qos.exec("select (id + 1) as index, name  from ${testData} where id > ${minid} and type = 'C'", {
+    testData : testData,
+    minid : 2
+})
+
+console.log(res);
+
+```
+
+### Options
+
+
+- prefix:(string) default = 'sql:'
+- mode:(lodash|underscore)
+
 
 
 

@@ -8,7 +8,6 @@ var res = qos.exec("select (id + 1) as index, name  from ${testData} where id > 
     minid : 2
 })
 
-
 console.log(res);
 
 

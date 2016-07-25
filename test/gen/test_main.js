@@ -24,6 +24,12 @@ testCase.formatter.formatMoney = function(number){
     });
 };
 
+testCase.demo = function(type, id, size){
+    return `sql: select id, name, ${type} from ${testData} where id>${id} order by id desc limit 10, ${size}`;
+};
+
+
+
 testCase.selectById = function(id){
     return `sql:select * from ${testData} where id=${id}`;
 };

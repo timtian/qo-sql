@@ -67,9 +67,6 @@ var Qos = {
                 t.callExpression(replacement, [t.arrayExpression(preexp)])
             );
         }
-    },
-    exec : function(sql, params, options){
-        return qoslib.exec(sql, params, options);
     }
 };
 

@@ -3,8 +3,7 @@
 Qos(Query Object with Sql)
 是用于在js的template literals中使用sql查询语法进行对象查询的一种实现
 
-> babel中暂不支持自定义语法，在template literals中注入自定义语法,
-> 是实现自定义语法的一个快速简单方法
+![babel-plugin-flow](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
 
 ## 文档
 
@@ -15,11 +14,12 @@ Qos(Query Object with Sql)
 
 将SQL语法查询连接已存在的各种丰富lib(lodash, underscore, immutablejs),提供一种统一的、便捷的、透明的对象查询方法。
 
-- 使用SQL语法这种古老的声明式的语法特别在查询时易于阅读与理解。
+- 使用SQL声明式的语法特别适合在查询，易于阅读与理解。
 - 在template literals语法中传递参数更加直接明了，灵活的上下文。
 - 编译过程直接将最终实现代码编译至目标源码中,消除了在运行时编译性能问题。
 - 使用成熟实现(lodash, underscore)在稳定性与性能上更加有所保证。
 - 与其它SQL之类相比更加简单轻量聚焦于Object查询
+- 支持babel-plugin模式与lib调用模式
 
 
 In
@@ -67,18 +67,72 @@ npm install babel-plugin-transform-object-rest-spread
 
 
 ## Usage
-Add the following line to your .babelrc file:
+
+### babel-plugin使用
+Via .babelrc
 ```
 {
-    "plugins": ["babel-plugin-template-literals-qos"]
+    "plugins": [
+        ["babel-plugin-template-literals-qos", {
+            prefix:'sql:',
+            mode:'lodash'
+        }
+    ]
 }
 ```
 
+Via Node API
+```
+var babel = require('babel-core');
+var _ = require('lodash');
+
+var options = {
+    presets: [
+        require('babel-preset-es2015')
+    ],
+    plugins: [
+        require('babel-plugin-syntax-object-rest-spread'),
+        require('babel-plugin-transform-object-rest-spread'),
+        [require('../src/index.js'), { prefix: 'sql:', mode :'lodash' }]
+    ],
+    babelrc : false
+};
+
+var result = babel.transform('code', options);
+
+```
 
 
-### Example
+### 做为类库直接调用
+Via Node Api As lib
+```
+var _ = require('lodash');
+var qos = require('babel-plugin-template-literals-qos/lib');
+var testData = require('../test/gen/test_data.js').arrayData;
 
 
+var res = qos.exec("select (id + 1) as index, name  from ${testData} where id > ${minid} and type = 'C'", {
+    testData : testData,
+    minid : 2
+})
+
+console.log(res);
+
+```
+
+### Options
+
+
+- prefix:(string)
+> 默认为'sql:',仅在作为babel-plugin中有效
+
+
+- mode:(lodash|underscore)
+> 编译的目标使用类库，默认为(lodash)
+
+
+
+## Example
 
 - 条件过滤
 ```
