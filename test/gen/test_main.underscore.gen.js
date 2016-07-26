@@ -26,6 +26,15 @@ testCase.formatter.formatMoney = function (number) {
     });
 };
 
+testCase.customReduce = function (empty, result, value, key) {
+    var ids = [];
+    value.forEach(function (item) {
+        ids.push(item.id);
+    });
+
+    return ids;
+};
+
 testCase.demo = function (type, id, size) {
     return function (params) {
         /**
@@ -40,9 +49,12 @@ testCase.demo = function (type, id, size) {
                     return sortList[i][1] == "ASC" ? sortRet : -sortRet;
                 }
             }return 0;
-        }).slice(10, 10 + params[3]);
-        return res;
+        }).slice(10, 10 + params[3]);return res;
     }([type, testData, id, size]);
+};
+
+testCase.checkPrefix = function (str) {
+    return 'hi:this is a test ' + str + '!';
 };
 
 testCase.selectById = function (id) {
@@ -121,6 +133,16 @@ testCase.selectByInCountryListAndNotInTypeList = function (ctyList, typeList) {
     }([testData, ctyList, typeList]);
 };
 
+testCase.selectByInStaticTypeList = function () {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return _.includes(['A', 'C'], item['type']);
+        }).map(function (item) {
+            return _extends({}, item);
+        }).value();return res;
+    }([testData]);
+};
+
 testCase.selectFieldWithExpressionByType = function (type) {
     return function (params) {
         var source = params[0];var res = _.chain(source).filter(function (item) {
@@ -159,6 +181,28 @@ testCase.selectAggByTypeAndCountry = function (minId) {
             }return 0;
         });return res;
     }([testData, minId]);
+};
+
+testCase.selectAvgAndCustomReduce = function () {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= 4;
+        }).groupBy(function (item) {
+            return "" + "_" + item['type'];
+        }).reduce(function (result, value, key) {
+            var item = value[0];var aggitem = { 'type': item['type'], 'ids': testCase.customReduce(item['id'], result, value, key), 'avg': function () {
+                    var sum = 0;value.forEach(function (item) {
+                        sum += item['count'];
+                    });return sum / value.length;
+                }(), 'count': value.length };result.push(aggitem);return result;
+        }, []).value().sort(function (a, b) {
+            var sortList = [['type', 'ASC']];for (var i = 0; i < sortList.length; i++) {
+                var sortName = sortList[i][0];var sortRet = 0;if (a[sortName] < b[sortName]) sortRet = -1;else if (a[sortName] != b[sortName]) sortRet = 1;if (sortRet != 0) {
+                    return sortList[i][1] == "ASC" ? sortRet : -sortRet;
+                }
+            }return 0;
+        });return res;
+    }([testData]);
 };
 
 module.exports = testCase;

@@ -20,7 +20,7 @@ function init(){
         plugins: [
             require('babel-plugin-syntax-object-rest-spread'),
             require('babel-plugin-transform-object-rest-spread'),
-            [require('../src/index.js'), { prefix: 'sql:', mode :'lodash' }]
+            [require('../src/index.js'), { prefix: 'sql:', mode :'lodash', debug:true }]
         ],
         babelrc : false
     };
@@ -113,6 +113,15 @@ function selectByInCountryListAndNotInTypeList(testCase){
     assert.deepEqual(res, exp);
 }
 
+
+function selectByInStaticTypeList(testCase){
+    var exp = testData.arrayData.filter(function(item){
+        return  _.includes(['A', 'C'], item.type);
+    });
+    var res = testCase.selectByInStaticTypeList();
+    assert.deepEqual(res, exp);
+}
+
 function selectFieldWithExpressionByType(testCase){
 
     var type = 'A';
@@ -162,6 +171,43 @@ function selectAggByTypeAndCountry(testCase){
 }
 
 
+function selectAvgAndCustomReduce(testCase){
+    var res = testCase.selectAvgAndCustomReduce();
+    var exp = [
+        {
+            "count": 1,
+            "avg": 103,
+            "ids": [1],
+            "type": "A"
+        },
+        {
+            "count": 2,
+            "avg": 99.5,
+            "ids": [2,4],
+            "type": "C"
+        },
+        {
+            "count": 1,
+            "avg": 34,
+            "ids": [3],
+            "type": "D"
+        }
+    ];
+
+    assert.deepEqual(res, exp);
+}
+
+
+describe('common', function(){
+
+    it('check prefix', function(){
+        var test = 'sql:';
+        var exp = 'hi:this is a test ' + test + '!'
+        var result = lodashTestCase.checkPrefix(test)
+        assert.equal(exp, result);
+    })
+});
+
 describe('lodash impl', function(){
 
 
@@ -194,6 +240,17 @@ describe('lodash impl', function(){
         it('selectByInCountryListAndNotInTypeList', function(){
             selectByInCountryListAndNotInTypeList(lodashTestCase);
         });
+
+        it('selectByInStaticTypeList', function(){
+            selectByInStaticTypeList(lodashTestCase);
+        });
+
+        it('selectAvgAndCustomReduce', function(){
+            selectAvgAndCustomReduce(lodashTestCase);
+        });
+
+
+
 
     });
 
@@ -244,6 +301,14 @@ describe('underscore impl', function(){
             selectByInCountryListAndNotInTypeList(underscoreTestCase);
         });
 
+
+        it('selectByInStaticTypeList', function(){
+            selectByInStaticTypeList(underscoreTestCase);
+        })
+
+        it('selectAvgAndCustomReduce', function(){
+            selectAvgAndCustomReduce(underscoreTestCase);
+        });
     });
 
     describe('#2 Select', function() {

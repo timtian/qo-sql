@@ -26,6 +26,15 @@ testCase.formatter.formatMoney = function (number) {
     });
 };
 
+testCase.customReduce = function (empty, result, value, key) {
+    var ids = [];
+    value.forEach(function (item) {
+        ids.push(item.id);
+    });
+
+    return ids;
+};
+
 testCase.demo = function (type, id, size) {
     return function (params) {
         /**
@@ -36,6 +45,10 @@ testCase.demo = function (type, id, size) {
             return { 'id': item['id'], 'name': item['name'], 'field_2': params[0] };
         }).orderBy(['id'], ['desc']).slice(10, 10 + params[3]).value();return res;
     }([type, testData, id, size]);
+};
+
+testCase.checkPrefix = function (str) {
+    return 'hi:this is a test ' + str + '!';
 };
 
 testCase.selectById = function (id) {
@@ -108,6 +121,16 @@ testCase.selectByInCountryListAndNotInTypeList = function (ctyList, typeList) {
     }([testData, ctyList, typeList]);
 };
 
+testCase.selectByInStaticTypeList = function () {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return _.includes(['A', 'C'], item['type']);
+        }).map(function (item) {
+            return _extends({}, item);
+        }).value();return res;
+    }([testData]);
+};
+
 testCase.selectFieldWithExpressionByType = function (type) {
     return function (params) {
         var source = params[0];var res = _.chain(source).filter(function (item) {
@@ -140,6 +163,22 @@ testCase.selectAggByTypeAndCountry = function (minId) {
                 }() };result.push(aggitem);return result;
         }, []).orderBy(['country', 'type'], ['asc', 'asc']).value();return res;
     }([testData, minId]);
+};
+
+testCase.selectAvgAndCustomReduce = function () {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= 4;
+        }).groupBy(function (item) {
+            return "" + "_" + item['type'];
+        }).reduce(function (result, value, key) {
+            var item = value[0];var aggitem = { 'type': item['type'], 'ids': testCase.customReduce(item['id'], result, value, key), 'avg': function () {
+                    var sum = 0;value.forEach(function (item) {
+                        sum += item['count'];
+                    });return sum / value.length;
+                }(), 'count': value.length };result.push(aggitem);return result;
+        }, []).orderBy(['type'], ['asc']).value();return res;
+    }([testData]);
 };
 
 module.exports = testCase;

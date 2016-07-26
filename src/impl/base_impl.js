@@ -12,7 +12,7 @@ var compiler = function (options) {
 };
 
 
-compiler.prototype.exec = function (ast, optinos, path) {
+compiler.prototype.exec = function (ast, options, path) {
     var code = ['not impl'];
     return jsbeautify.js_beautify(code.join('\n'));
 };

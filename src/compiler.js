@@ -18,7 +18,7 @@ compiler.mode = {
 
 
 compiler.exec = function (ast, options) {
-    var impl = new (require('./impl/' + (options.mode || 'array') + '_impl' ))();
+    var impl = new (require('./impl/' + (options.mode || 'array') + '_impl' ))(options);
     return impl.exec(ast, options);
 
 };
