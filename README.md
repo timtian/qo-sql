@@ -1,16 +1,17 @@
-# Qos
-[![Build Status](https://travis-ci.org/timtian/Qos.svg?branch=master)](https://travis-ci.org/timtian/Qos)
-[![codecov](https://codecov.io/gh/timtian/Qos/branch/master/graph/badge.svg)](https://codecov.io/gh/timtian/Qos)
+# qo-sql
+[![Build Status](https://travis-ci.org/timtian/qo-sql.svg?branch=master)](https://travis-ci.org/timtian/qo-sql)
+[![codecov](https://codecov.io/gh/timtian/qo-sql/branch/master/graph/badge.svg)](https://codecov.io/gh/timtian/qo-sql)
+[![Code Climate](https://codeclimate.com/github/timtian/qo-sql/badges/gpa.svg)](https://codeclimate.com/github/timtian/qo-sql)
+[![NPM version](https://badge.fury.io/js/qo-sql.svg)](http://badge.fury.io/js/qo-sql)
 
-
-Qos(Query Object with Sql)
+qo-sql(Query Object with Sql)
 It is a implementation of object query with template literals of JavaScript using Sql
 
-![babel-plugin-flow](https://raw.githubusercontent.com/timtian/Qos/master/docs/babel-plugin-flow.png)
+![babel-plugin-flow](https://raw.githubusercontent.com/timtian/qo-sql/master/docs/babel-plugin-flow.png)
 
 ## document
-- [中文](https://github.com/timtian/Qos/blob/master/docs/README_CN.md)
-- [English](https://github.com/timtian/Qos/blob/master/README.md)
+- [中文](https://github.com/timtian/qo-sql/blob/master/docs/README_CN.md)
+- [English](https://github.com/timtian/qo-sql/blob/master/README.md)
 
 ## specialty
 
@@ -57,7 +58,7 @@ var data = function (params) {
 
 ## Install
 ```
-npm install babel-plugin-template-literals-qos
+npm install qo-sql
 ```
 
 Conversion relies on object-rest-spread.Please ensure that you have installed the following  components
@@ -74,7 +75,7 @@ npm install babel-plugin-transform-object-rest-spread
 ```
 {
     "plugins": [
-        ["babel-plugin-template-literals-qos", {
+        ["qo-sql", {
             prefix:'sql:',
             mode:'lodash'
         }
@@ -108,7 +109,7 @@ var result = babel.transform('code', options);
 ### Via Node Api As lib
 ```
 var _ = require('lodash');
-var qos = require('babel-plugin-template-literals-qos/lib');
+var qos = require('qo-sql/lib');
 var testData = require('../test/gen/test_data.js').arrayData;
 
 
@@ -197,11 +198,11 @@ console.log(res);
 
 - more examples
 
->[Examples](https://github.com/timtian/Qos/blob/master/test/gen/test_main.js)
+>[Examples](https://github.com/timtian/qo-sql/blob/master/test/gen/test_main.js)
 
 >after compiling
 
->[Compile to lodash](https://github.com/timtian/Qos/blob/master/test/gen/test_main.lodash.gen.js)
+>[Compile to lodash](https://github.com/timtian/qo-sql/blob/master/test/gen/test_main.lodash.gen.js)
 
 
->[Compile to underscore](https://github.com/timtian/Qos/blob/master/test/gen/test_main.underscore.gen.js)
+>[Compile to underscore](https://github.com/timtian/qo-sql/blob/master/test/gen/test_main.underscore.gen.js)
