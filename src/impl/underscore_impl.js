@@ -159,7 +159,7 @@ compiler.prototype.exec = function(ast, options, path){
     //4. set limit .slice(x,y)
     if(ast.limit){
         code.push('.slice(');
-        if(ast.limit[1] == -1){
+        if(ast.limit[1].value < 0){
             code.push(me.parseExpression(ast.limit[0]));
         }else{
             code.push(me.parseExpression(ast.limit[0]) + ',' + me.parseExpression(ast.limit[0]) + '+' +  me.parseExpression(ast.limit[1]));

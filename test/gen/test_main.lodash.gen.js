@@ -107,8 +107,28 @@ testCase.selectByBwIdWithOrder = function (minid, maxid, start, count) {
             return item['id'] >= params[1] && item['id'] <= params[2];
         }).map(function (item) {
             return _extends({}, item);
-        }).orderBy(['type', 'count'], ['asc', 'desc']).slice(params[3], params[3] + params[4]).value();return res;
+        }).orderBy(['type', 'count', 'id'], ['asc', 'desc', 'asc']).slice(params[3], params[3] + params[4]).value();return res;
     }([testData, minid, maxid, start, count]);
+};
+
+testCase.selectByMaxWithLimit = function (maxid) {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= params[1];
+        }).map(function (item) {
+            return _extends({}, item);
+        }).orderBy(['type', 'count', 'id'], ['asc', 'desc', 'asc']).slice(0, 0 + 2).value();return res;
+    }([testData, maxid]);
+};
+
+testCase.selectByMaxWithLimit2 = function (maxid) {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= params[1];
+        }).map(function (item) {
+            return _extends({}, item);
+        }).orderBy(['type', 'count', 'id'], ['asc', 'desc', 'asc']).slice(2).value();return res;
+    }([testData, maxid]);
 };
 
 testCase.selectByInCountryListAndNotInTypeList = function (ctyList, typeList) {

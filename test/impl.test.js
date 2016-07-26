@@ -91,6 +91,10 @@ function selectByBwIdWithOrder(testCase){
         return item.id >= 70 && item.id <= 89
     }).sort(function(a, b){
         if(a.type == b.type){
+            if(a.count == b.count)
+            // id asc
+                return a.id > b.id ? 1 : -1;
+
             //count desc
             return  -(a.count - b.count);
         }else{
@@ -101,6 +105,53 @@ function selectByBwIdWithOrder(testCase){
 
 
     var res = testCase.selectByBwIdWithOrder(70, 89, 2, 10);
+    assert.deepEqual(res, exp);
+}
+
+function selectByMaxWithLimit(testCase){
+    var exp = testData.arrayData.filter(function(item){
+        return item.id <= 89
+    }).sort(function(a, b){
+        if(a.type == b.type){
+            //count desc
+
+            if(a.count == b.count)
+                // id asc
+                return a.id > b.id ? 1 : -1;
+
+            return  -(a.count - b.count);
+        }else{
+            //type asc
+            return a.type > b.type ? 1 : -1;
+        }
+    }).slice(0,2);
+
+
+    var res = testCase.selectByMaxWithLimit(89);
+    assert.deepEqual(res, exp);
+}
+
+function selectByMaxWithLimit2(testCase){
+    var exp = testData.arrayData.filter(function(item){
+        return item.id <= 23
+    }).sort(function(a, b){
+        if(a.type == b.type){
+            //count desc
+
+            if(a.count == b.count)
+                // id asc
+                return a.id > b.id ? 1 : -1;
+
+            return  -(a.count - b.count);
+        }else{
+            //type asc
+            return a.type > b.type ? 1 : -1;
+        }
+
+    }).slice(2);
+
+
+    var res = testCase.selectByMaxWithLimit2(23);
     assert.deepEqual(res, exp);
 }
 
@@ -237,6 +288,15 @@ describe('lodash impl', function(){
             selectByBwIdWithOrder(lodashTestCase);
         });
 
+        it('selectByMaxWithLimit', function(){
+            selectByMaxWithLimit(lodashTestCase);
+        });
+
+        it('selectByMaxWithLimit2', function(){
+            selectByMaxWithLimit2(lodashTestCase);
+        });
+
+
         it('selectByInCountryListAndNotInTypeList', function(){
             selectByInCountryListAndNotInTypeList(lodashTestCase);
         });
@@ -295,6 +355,14 @@ describe('underscore impl', function(){
 
         it('selectByBwIdWithOrder', function(){
             selectByBwIdWithOrder(underscoreTestCase);
+        });
+
+        it('selectByMaxWithLimit', function(){
+            selectByMaxWithLimit(underscoreTestCase);
+        });
+
+        it('selectByMaxWithLimit2', function(){
+            selectByMaxWithLimit2(underscoreTestCase);
         });
 
         it('selectByInCountryListAndNotInTypeList', function(){

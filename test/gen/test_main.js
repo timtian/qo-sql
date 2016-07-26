@@ -63,8 +63,16 @@ testCase.selectByBwId = function(minid, maxid){
 };
 
 testCase.selectByBwIdWithOrder = function(minid, maxid, start, count){
-    return `sql:select * from ${testData} where id>=${minid} and id<=${maxid} order by type, count desc limit ${start}, ${count}`;
+    return `sql:select * from ${testData} where id>=${minid} and id<=${maxid} order by type, count desc, id asc limit ${start}, ${count}`;
 };
+
+testCase.selectByMaxWithLimit = function(maxid){
+    return `sql:select * from ${testData} where id<=${maxid} order by type, count desc, id asc limit 2`;
+};
+
+testCase.selectByMaxWithLimit2 = function(maxid){
+    return `sql:select * from ${testData} where id<=${maxid} order by type, count desc, id asc limit 2, -1`;
+}
 
 testCase.selectByInCountryListAndNotInTypeList = function(ctyList, typeList){
     return `sql:select * from ${testData} where country IN ${ctyList} AND type NOT IN ${typeList}`;

@@ -77,6 +77,8 @@ compiler.prototype.parseExpression = function (expr) {
     } else if (expr instanceof yy.FunctionValue) {
         //default push item in last args
         code.push(this.parseFunction(expr))
+    }else{
+        code.push(expr);
     }
     return code;
 };

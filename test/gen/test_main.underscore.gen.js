@@ -114,13 +114,45 @@ testCase.selectByBwIdWithOrder = function (minid, maxid, start, count) {
         }).map(function (item) {
             return _extends({}, item);
         }).value().sort(function (a, b) {
-            var sortList = [['type', 'ASC'], ['count', 'DESC']];for (var i = 0; i < sortList.length; i++) {
+            var sortList = [['type', 'ASC'], ['count', 'DESC'], ['id', 'ASC']];for (var i = 0; i < sortList.length; i++) {
                 var sortName = sortList[i][0];var sortRet = 0;if (a[sortName] < b[sortName]) sortRet = -1;else if (a[sortName] != b[sortName]) sortRet = 1;if (sortRet != 0) {
                     return sortList[i][1] == "ASC" ? sortRet : -sortRet;
                 }
             }return 0;
         }).slice(params[3], params[3] + params[4]);return res;
     }([testData, minid, maxid, start, count]);
+};
+
+testCase.selectByMaxWithLimit = function (maxid) {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= params[1];
+        }).map(function (item) {
+            return _extends({}, item);
+        }).value().sort(function (a, b) {
+            var sortList = [['type', 'ASC'], ['count', 'DESC'], ['id', 'ASC']];for (var i = 0; i < sortList.length; i++) {
+                var sortName = sortList[i][0];var sortRet = 0;if (a[sortName] < b[sortName]) sortRet = -1;else if (a[sortName] != b[sortName]) sortRet = 1;if (sortRet != 0) {
+                    return sortList[i][1] == "ASC" ? sortRet : -sortRet;
+                }
+            }return 0;
+        }).slice(0, 0 + 2);return res;
+    }([testData, maxid]);
+};
+
+testCase.selectByMaxWithLimit2 = function (maxid) {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= params[1];
+        }).map(function (item) {
+            return _extends({}, item);
+        }).value().sort(function (a, b) {
+            var sortList = [['type', 'ASC'], ['count', 'DESC'], ['id', 'ASC']];for (var i = 0; i < sortList.length; i++) {
+                var sortName = sortList[i][0];var sortRet = 0;if (a[sortName] < b[sortName]) sortRet = -1;else if (a[sortName] != b[sortName]) sortRet = 1;if (sortRet != 0) {
+                    return sortList[i][1] == "ASC" ? sortRet : -sortRet;
+                }
+            }return 0;
+        }).slice(2);return res;
+    }([testData, maxid]);
 };
 
 testCase.selectByInCountryListAndNotInTypeList = function (ctyList, typeList) {

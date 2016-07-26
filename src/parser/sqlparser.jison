@@ -161,7 +161,7 @@ ColumnName
 	: ColumnName DOT Literal
 		{ $1.value.push($3); $$ = $1;}
 	| Literal
-		{ $$ = new yy.Column({value:[$1]});}
+		{ $$ = new yy.Column({value:[$1], as:$1});}
     | STAR
         { $$ = new yy.Column({value:['*']})}
 	;
@@ -187,6 +187,8 @@ Expression
 NumValue
 	: NUMBER
 		{  $$ = new yy.Value({value:parseFloat($1)}); }
+    | MINUS NUMBER
+        {  $$ = new yy.Value({value: -parseFloat($2)}); }
 	;
 
 LogicValue
