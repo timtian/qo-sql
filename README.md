@@ -95,7 +95,7 @@ var options = {
     plugins: [
         require('babel-plugin-syntax-object-rest-spread'),
         require('babel-plugin-transform-object-rest-spread'),
-        [require('../src/index.js'), { prefix: 'sql:', mode :'lodash' }]
+        [require('qo-sql'), { prefix: 'sql:', mode :'lodash' }]
     ],
     babelrc : false
 };
@@ -203,6 +203,4 @@ console.log(res);
 >after compiling
 
 >[Compile to lodash](https://github.com/timtian/qo-sql/blob/master/test/gen/test_main.lodash.gen.js)
-
-
 >[Compile to underscore](https://github.com/timtian/qo-sql/blob/master/test/gen/test_main.underscore.gen.js)

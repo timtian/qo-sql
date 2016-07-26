@@ -1,7 +1,7 @@
 {
   "name": "qo-sql",
   "description": "qo-sql (Query Object with Sql) can be a babel plugin to query object in template literals with sql syntax or as lib",
-  "keywords": "sql query object babel plugin template literals",
+  "keywords": "sql query object babel plugin template literals lodash underscore",
   "version": "0.0.3",
   "scripts": {
     "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec"
