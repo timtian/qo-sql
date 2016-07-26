@@ -1,4 +1,6 @@
 # Qos
+[![Build Status](https://travis-ci.org/timtian/Qos.svg?branch=master)](https://travis-ci.org/timtian/Qos)
+
 
 Qos(Query Object with Sql)
 It is a implementation of object query with template literals of JavaScript using Sql

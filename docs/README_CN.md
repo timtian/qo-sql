@@ -1,4 +1,6 @@
 # Qos
+[![Build Status](https://travis-ci.org/timtian/Qos.svg?branch=master)](https://travis-ci.org/timtian/Qos)
+
 
 Qos(Query Object with Sql)
 是用于在js的template literals中使用sql查询语法进行对象查询的一种实现
