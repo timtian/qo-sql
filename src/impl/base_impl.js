@@ -74,7 +74,7 @@ compiler.prototype.parseExpression = function (expr) {
     } else if (expr instanceof yy.FunctionValue) {
         //default push item in last args
         code.push(this.parseFunction(expr))
-    }else{
+    } else {
         code.push(expr);
     }
     return code;
@@ -122,23 +122,15 @@ compiler.prototype.parseReturnColumns = function (columns, options) {
 
         //set [as] or default field name
         code.push("'" + this.safeStr(col.as || "field_" + i) + "' : ");
-        if (col instanceof yy.Column) {
-            if (col.value[0] === '*') {
-                code.pop();
-                code.push('...item')
-            } else {
-                code.push(this.parseColumn(col));
-            }
-        } else if (col instanceof yy.Op) {
-            code.push(this.parseOp(col));
-        } else if (col instanceof yy.ParamValue) {
-            code.push('params[' + col.index + ']');
-        } else if (col instanceof yy.FunctionValue) {
-            if (options.trans && options.trans.functionValue) {
-                code.push(options.trans.functionValue(col));
-            } else {
-                code.push(this.parseFunction(col));
-            }
+
+        if (col instanceof yy.Column && col.value[0] === '*') {
+            code.pop();
+            code.push('...item')
+        } else if (col instanceof yy.FunctionValue && options.trans && options.trans.functionValue) {
+            code.push(options.trans.functionValue(col));
+        }
+        else {
+            code.push(this.parseExpression(col));
         }
     }
     code.push('}');
