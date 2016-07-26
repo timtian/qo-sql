@@ -342,4 +342,5 @@ OrderArg
 OrderType
     : ASC { $$ = 'ASC'}
     | DESC { $$ = 'DESC'}
+    | ParamValue { $$ = $1}
     ;

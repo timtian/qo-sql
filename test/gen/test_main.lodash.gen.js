@@ -111,6 +111,16 @@ testCase.selectByBwIdWithOrder = function (minid, maxid, start, count) {
     }([testData, minid, maxid, start, count]);
 };
 
+testCase.selectByMaxIdWithOrderType = function (maxid, ordername, ordertype) {
+    return function (params) {
+        var source = params[0];var res = _.chain(source).filter(function (item) {
+            return item['id'] <= params[1];
+        }).map(function (item) {
+            return _extends({}, item);
+        }).orderBy([params[2], 'id'], [params[3], 'asc']).value();return res;
+    }([testData, maxid, ordername, ordertype]);
+};
+
 testCase.selectByMaxWithLimit = function (maxid) {
     return function (params) {
         var source = params[0];var res = _.chain(source).filter(function (item) {

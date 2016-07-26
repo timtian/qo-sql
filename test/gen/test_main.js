@@ -66,6 +66,10 @@ testCase.selectByBwIdWithOrder = function(minid, maxid, start, count){
     return `sql:select * from ${testData} where id>=${minid} and id<=${maxid} order by type, count desc, id asc limit ${start}, ${count}`;
 };
 
+testCase.selectByMaxIdWithOrderType = function(maxid, ordername, ordertype){
+    return `sql:select * from ${testData} where id<=${maxid} order by ${ordername} ${ordertype}, id asc`;
+};
+
 testCase.selectByMaxWithLimit = function(maxid){
     return `sql:select * from ${testData} where id<=${maxid} order by type, count desc, id asc limit 2`;
 };

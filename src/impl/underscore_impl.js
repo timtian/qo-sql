@@ -130,7 +130,14 @@ compiler.prototype.exec = function(ast, options, path){
             else
                 sortListCode.push("[" + me.parseExpression(x.column) + ",");
 
-            sortListCode.push("'" + x.order + "']");
+
+            if(x.order instanceof yy.ParamValue){
+                sortListCode.push(me.parseExpression(x.order));
+            }else {
+                sortListCode.push("'" + x.order + "'");
+            }
+            sortListCode.push("]");
+
         });
         sortListCode.push('];');
 

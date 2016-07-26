@@ -125,7 +125,12 @@ compiler.prototype.exec = function(ast, options, path){
             else
                 sortListName.push(me.parseExpression(x.column));
 
-            sortListOrder.push("'" + x.order + "'");
+
+            if(x.order instanceof yy.ParamValue){
+                sortListOrder.push(me.parseExpression(x.order));
+            }else {
+                sortListOrder.push("'" + x.order + "'");
+            }
         });
 
 

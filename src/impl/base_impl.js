@@ -7,14 +7,11 @@ var _ = require('lodash');
 var yy = require('../parser/yy');
 var jsbeautify = require('js-beautify');
 
-var compiler = function (options) {
-    this.options = options;
+var compiler = function () {
 };
 
 
 compiler.prototype.exec = function (ast, options, path) {
-    var code = ['not impl'];
-    return jsbeautify.js_beautify(code.join('\n'));
 };
 
 compiler.prototype.parseOp = function (op) {
