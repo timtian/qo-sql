@@ -1,5 +1,6 @@
 # Qos
 [![Build Status](https://travis-ci.org/timtian/Qos.svg?branch=master)](https://travis-ci.org/timtian/Qos)
+[![codecov](https://codecov.io/gh/timtian/Qos/branch/master/graph/badge.svg)](https://codecov.io/gh/timtian/Qos)
 
 
 Qos(Query Object with Sql)
