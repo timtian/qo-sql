@@ -16,10 +16,10 @@ compiler.prototype.exec = function (ast, options, path) {
 
 compiler.prototype.parseOp = function (op) {
 
-    if (op.op == "IN") {
+    if (op.op === "IN") {
         return "_.includes(" + this.parseExpressionList(op.right) + "," + this.parseExpression(op.left) + ')';
     }
-    else if (op.op == "NOT IN") {
+    else if (op.op === "NOT IN") {
         return "!(_.includes(" + this.parseExpressionList(op.right) + "," + this.parseExpression(op.left) + '))';
     }
     else {
@@ -27,11 +27,11 @@ compiler.prototype.parseOp = function (op) {
         var code = ['('];
         code = code.concat(this.parseExpression(op.left));
 
-        if (op.op == "AND")
+        if (op.op === "AND")
             code.push('&&');
-        else if (op.op == "OR")
+        else if (op.op === "OR")
             code.push('||');
-        else if (op.op == "=")
+        else if (op.op === "=")
             code.push('==');
         else
             code.push(op.op);
