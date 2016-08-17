@@ -7,9 +7,12 @@
 qo-sql(Query Object with Sql)
 > a simple way to query object/array with sql, it's will compile to lodash/underscore
 > you can use it as babel-plugin or lib.
-> qo-sql different with other javascript sql lib is, as babel-plugin will compile to target code, qo-sql most like  a compiler.
-> **parse sql-syntax at run-time not best choice,better choice it's work at compile time;
+> different with other javascript sql lib is, as babel-plugin will compile to target code, qo-sql most like  a compiler.
+
+
+**parse sql-syntax at run-time not best choice,better choice it's work at compile time;
 babel is compiler, and not only es6 transformer.**
+
 #### In
 
 ```
