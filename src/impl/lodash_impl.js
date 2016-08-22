@@ -35,7 +35,6 @@ compiler.prototype.exec = function(ast, options, path){
 
     if(ast.group){
         code.push('.groupBy(item=>{');
-
         code.push('    return ""');
         ast.group.forEach(function(x){
             code.push(' + "_" + ')

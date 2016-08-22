@@ -46,6 +46,8 @@ npm install babel-plugin-transform-object-rest-spread
 ## Usage
 
 ## Lib Mode
+
+### es5
 ```
 var _ = require('lodash');
 var qos = require('qo-sql/lib');
@@ -59,8 +61,19 @@ var res = qos.exec("select (id + 1) as index, name  from ${testData} where id > 
 
 ```
 
-## Babel-plugin Mode
+### es6
+```
+var _ = require('lodash');
+var qos = require('qo-sql/lib/tagged');
+var testData = require('../test/gen/test_data.js').arrayData;
+var id=2;
 
+var res = qos`select * from ${testData} where id=${id}`;
+```
+
+## Babel-plugin Mode (recommend)
+
+**parse in compile time**
 > babel-plugin mode support query object in template-literals
 
 such as

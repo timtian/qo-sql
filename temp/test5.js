@@ -24,6 +24,13 @@ var exp = testData.filter(function(item){
     }
 });
 
+var res = qos.exec("select * from ${data} where id=${id}", {
+    data:testData,
+    id:2
+});
+
+console.log(res);
+
 
 
 
